@@ -1,5 +1,12 @@
-import { request, gql } from "graphql-request";
-import { graphqlAPI } from "../config.js";
+import { GraphQLClient, request, gql } from "graphql-request";
+import { graphqlAPI, GRAPHCMS_TOKEN } from "../config.js";
+
+const graphQLClient = new GraphQLClient(graphqlAPI, {
+  headers: {
+    authorization: `Bearer ${process.env.GRAPHCMS_TOKEN}`,
+  },
+});
+
 
 const publish = gql`
   mutation MyMutation($id: ID) {
@@ -106,7 +113,7 @@ export const addImage = async (req, res) => {
           url: $url
           likes: $likes
           views: $views
-          creator: { connect: { Creator: { slug: $creator_id } } }
+          creator: { connect: { Creator: { id: $creator_id } } }
         }
       ) {
         id
